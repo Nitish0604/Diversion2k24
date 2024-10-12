@@ -1,12 +1,17 @@
 import React from 'react'
 import { useState } from 'react';
-import logo from "../assets/logo.png"
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { baseurl } from '../index';
+
+//image
+import logo from "../assets/logo.png"
+
 const Subscription = () => {
 
   const navigate = useNavigate();
+  const [isloading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     guardianName: '',
     email: '',
@@ -31,6 +36,7 @@ const Subscription = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const config = {
         headers: {
@@ -38,19 +44,21 @@ const Subscription = () => {
         },
       };
       const data = await axios.post(
-        "http://localhost:4000/api/PlusCare/Home/newSubscriber",
+        `${baseurl}/Home/newSubscriber`,
         formData
         ,
         config
       );
       console.log(data);
       const user = localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("user", "Patient");
       console.log(user);
       navigate("/");
 
     } catch (error) {
       toast.error("An error occurred");
     }
+    setIsLoading(false);
   };
 
 
@@ -140,7 +148,7 @@ const Subscription = () => {
                 <label className='mb-2 font-semibold text-[1.1rem]' htmlFor="contact">Phone Number:</label>
                 <input
                   className="border-b-2 border-b-darkGreen w-full  h-[50px] p-2"
-                  type="number"
+                  type='number'
                   id="contact"
                   name="contact"
                   placeholder='Enter Your Phone No'
@@ -205,7 +213,18 @@ const Subscription = () => {
                 </div>
               </div>
               <div className='h-[15%] flex justify-center'>
-                <button className='w-[137px] h-[42px] bg-darkGreen border rounded-md px-[19px] py-[10px] flex justify-center items-center text-[#ffffff] font-roboto font-semibold tracking-tighter'>Submit</button>
+                <button className='w-[137px] h-[42px] bg-darkGreen border rounded-md px-[19px] py-[10px] flex justify-center items-center text-[#ffffff] font-roboto font-semibold tracking-tighter'>
+                  {
+                    isloading ? (
+                      <div className="spinner-border animate-spin inline-block w-4 h-4 border-2 rounded-full" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    ) :
+                      (
+                        <p>Submit</p>
+                      )
+                  }
+                </button>
               </div>
             </form>
           </div>

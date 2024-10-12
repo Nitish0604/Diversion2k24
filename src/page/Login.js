@@ -1,23 +1,26 @@
 import React from 'react'
 import { useState } from 'react';
-import logo from "../assets/logo.png";
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { baseurl } from '../index';
+//image
+import logo from "../assets/logo.png";
 
+
+//icons
 import { IoEyeOffSharp } from "react-icons/io5";
 import { FaEye } from "react-icons/fa6";
 
-const Login = ({setIsLoggedIn,setPatientDoctor}) => {
-
-    const [Doctor, setDoctor] = useState(false);
-    const [Patient, setPatient] = useState(true);
+const Login = () => {
+    const [isloading, setIsLoading] = useState(false);
+    const [userLogIn, setUserLogIn] = useState("Patient");
     const [razar, setRazar] = useState(false);
 
-    const[password,setpassword]=useState(true);
+    const [password, setpassword] = useState(true);
 
-    const eye=()=>{
+    const eye = () => {
         setpassword(!password);
     }
 
@@ -40,6 +43,7 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
     // patient
     const submitHandler = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         try {
             const config = {
                 headers: {
@@ -47,38 +51,31 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
                 },
             };
 
-            const { data } = await axios.post(
-                "http://localhost:4000/api/PlusCare/Home/userLogIn",
+            const  response  = await axios.post(
+                `${baseurl}/Home/userLogIn`,
                 formData,
                 config
             );
-            console.log(data);
-            if (data.success) {
-                
-                toast.success("Login successful!");
+            console.log(response);
+            if (response?.data?.success) {
 
-                localStorage.setItem("userInfo", JSON.stringify(data));
-                // navigate("/dashboard");
-                setPatient(false);
-                // if(User.user.packages.length==0)
-                // {
-                //     setRazar(true);
-                // }
-                // else{
-                //     navigate('/dashboard');
-                // }
-                setRazar(true);
-                setPatientDoctor(false);
+                localStorage.setItem("userInfo", JSON.stringify(response));
+                // setRazar(true);
+                localStorage.setItem("user", "Patient");
+                navigate("/dashboard");
+                toast.success("Login successful!");
             } else {
                 toast.error("User Not exists!");
             }
         } catch (error) {
             toast.error("An error occurred");
         }
+        setIsLoading(false);
     };
     // doctor
     const submitDoctorHandler = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         try {
             const config = {
                 headers: {
@@ -86,23 +83,24 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
                 },
             };
 
-            const { data } = await axios.post(
-                "http://localhost:4000/api/PlusCare/Home/doctorLogin",
+            const response  = await axios.post(
+                `${baseurl}/Home/doctorLogin`,
                 formData,
                 config
             );
-            console.log(data);
+            console.log(response);
             //setUser(data);
 
-            if (data.success) {
+            if (response?.data?.success) {
+
+
+                // setUser(data);
+                localStorage.setItem("userInfo", JSON.stringify(response));
+                localStorage.setItem("user", "Doctor");
+                navigate("/doctordashboard");
                 // Display success notification
                 toast.success("Login successful!");
 
-                // setUser(data);
-                setIsLoggedIn(true);
-                localStorage.setItem("userInfo", JSON.stringify(data));
-                navigate("/doctordashboard");
-                setPatientDoctor(true);
             } else {
                 // Display notification for existing user
                 toast.error("User not exists!");
@@ -114,6 +112,7 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
         } catch (error) {
             toast.error("An error occurred");
         }
+        setIsLoading(false);
     };
 
     function loadScript(src) {
@@ -138,7 +137,7 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
         e.preventDefault();
         try {
             const { data } = await axios.post(
-                "http://localhost:4000/api/PlusCare/Home/initializePayment",
+                `${baseurl}/Home/initializePayment`,
                 { amount: 500 }
             );
             const options = {
@@ -150,7 +149,7 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
                 order_id: data.id,
                 handler: async (response) => {
                     try {
-                        const verifyUrl = "http://localhost:4000/api/PlusCare/Home/verifyPayment";
+                        const verifyUrl = `${baseurl}/Home/verifyPayment`;
                         const { data } = await axios.post(verifyUrl, {
                             ...response,
                             sid,
@@ -172,7 +171,6 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
             console.log(error);
         }
         setTimeout(() => {
-            setIsLoggedIn(true);
             navigate("/dashboard");
         }, 20000);
 
@@ -183,16 +181,14 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
 
             <div className='px-2 z-[2] w-fit absolute right-3 top-3 rounded-md bg-darkGreen'>
                 <button onClick={() => {
-                    setPatient(true);
-                    setDoctor(false);
-                }} className='px-3 py-2 bg-white rounded-lg m-2 font-bold'>Patient</button>
+                    setUserLogIn("Patient");
+                }} className={`px-3 py-2 bg-white rounded-lg m-2 font-bold`}>Patient</button>
                 <button onClick={() => {
-                    setDoctor(true);
-                    setPatient(false);
-                }} className='px-3 py-2 bg-white rounded-lg m-2 font-bold'>Doctor</button>
+                    setUserLogIn("Doctor");
+                }} className={`px-3 py-2 bg-white rounded-lg m-2 font-bold`}>Doctor</button>
             </div>
             {
-                Doctor &&
+                userLogIn === "Doctor" &&
                 <div className="relative w-[90%] flex md:flex-row flex-col justify-between items-center h-fit">
                     {/* Left Part */}
 
@@ -233,33 +229,41 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
                                 className='w-full py-[.5rem]'
                                 htmlFor='password'>
                                 <p
-                                className='text-xl font-medium text-[#020617] pl-[3rem]'
+                                    className='text-xl font-medium text-[#020617] pl-[3rem]'
                                 >Password:
                                 </p>
                             </label>
                             <div className='w-[100%] flex items-center justify-center'>
-                            <input
-                                type={password ? 'password':'text'}
-                                name='password'
-                                onChange={changeHandler}
-                                value={formData.password}
-                                className='border-none  outline-slate-200 ring-1 p-2 rounded-lg h-14 w-[85%]'
-                                placeholder="Enter The Password"
-                                required
-                                
-                            />
-                            <div className='absolute right-14 cursor-pointer' onClick={eye}>
-                                {
-                                    password? <IoEyeOffSharp /> :  <FaEye /> 
-                                }
-                           
+                                <input
+                                    type={password ? 'password' : 'text'}
+                                    name='password'
+                                    onChange={changeHandler}
+                                    value={formData.password}
+                                    className='border-none  outline-slate-200 ring-1 p-2 rounded-lg h-14 w-[85%]'
+                                    placeholder="Enter The Password"
+                                    required
+
+                                />
+                                <div className='absolute right-14 cursor-pointer' onClick={eye}>
+                                    {
+                                        password ? <IoEyeOffSharp /> : <FaEye />
+                                    }
+
+                                </div>
                             </div>
-                            </div>
-                            
-                            
+
+
                         </div>
                         <button className=' h-14 w-[85%] ml-3 mt-6 bg-darkGreen border rounded-lg px-5 py-3 flex justify-center items-center text-[#ffffff]  text-base font-semibold tracking-tighter '>
-                            Login
+                            {
+                                isloading ? (
+                                    <span className="">Loading...</span>
+
+                                ) :
+                                    (
+                                        <p>Login</p>
+                                    )
+                            }
                         </button>
                         <div className="text-slate-950 ml-3">
                             Don't have an account ? <Link to="/subscription" className="font-bold">Register</Link>
@@ -268,7 +272,7 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
                 </div>
             }
             {
-                Patient &&
+                userLogIn === "Patient" &&
                 <div className="relative w-[90%] flex md:flex-row flex-col justify-between items-center h-fit">
                     {/* Left Part */}
 
@@ -309,33 +313,41 @@ const Login = ({setIsLoggedIn,setPatientDoctor}) => {
                                 className='w-full py-[.5rem]'
                                 htmlFor='password'>
                                 <p
-                                className='text-xl font-medium text-[#020617] pl-[3rem]'
+                                    className='text-xl font-medium text-[#020617] pl-[3rem]'
                                 >Password:
                                 </p>
                             </label>
                             <div className='w-[100%] flex items-center justify-center'>
-                            <input
-                                type={password ? 'password':'text'}
-                                name='password'
-                                onChange={changeHandler}
-                                value={formData.password}
-                                className='border-none  outline-slate-200 ring-1 p-2 rounded-lg h-14 w-[85%]'
-                                placeholder="Enter The Password"
-                                required
-                                
-                            />
-                            <div className='absolute right-14 cursor-pointer' onClick={eye}>
-                                {
-                                    password? <IoEyeOffSharp /> :  <FaEye /> 
-                                }
-                           
+                                <input
+                                    type={password ? 'password' : 'text'}
+                                    name='password'
+                                    onChange={changeHandler}
+                                    value={formData.password}
+                                    className='border-none  outline-slate-200 ring-1 p-2 rounded-lg h-14 w-[85%]'
+                                    placeholder="Enter The Password"
+                                    required
+
+                                />
+                                <div className='absolute right-14 cursor-pointer' onClick={eye}>
+                                    {
+                                        password ? <IoEyeOffSharp /> : <FaEye />
+                                    }
+
+                                </div>
                             </div>
-                            </div>
-                            
-                            
+
+
                         </div>
                         <button className=' h-14 w-[85%] ml-3 mt-6 bg-darkGreen border rounded-lg px-5 py-3 flex justify-center items-center text-[#ffffff]  text-base font-semibold tracking-tighter '>
-                            Login
+                            {
+                                isloading ? (
+                                    <span className="">Loading...</span>
+
+                                ) :
+                                    (
+                                        <p>Login</p>
+                                    )
+                            }
                         </button>
                         <div className="text-slate-950 ml-3">
                             Don't have an account ? <Link to="/subscription" className="font-bold">Register</Link>

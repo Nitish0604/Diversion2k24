@@ -3,7 +3,10 @@ const bcrypt = require("bcrypt");
 const otpGenerator = require('otp-generator');
 const mailSender = require('../util/mailSender');
 const { subscriptionEmail } = require("../mailTemplate/subscriptionEmail");
-const Vaccine = require("../models/vaccineModel")
+const Vaccine = require("../models/vaccineModel");
+const Doctor = require("../models/doctorModel");
+
+
 const newSubscriber = async (req, res) => {
     try {
         const { guardianName, childName, dob, gender, email, contact, address, dist, state, pin } = req.body;
@@ -44,43 +47,44 @@ const newSubscriber = async (req, res) => {
 }
 
 
-const getSubscriberById = async(req,res) => {
-    try{
-        const {id} = req.params;
-        const val = await Subscriber.findById({_id : id})
-        .populate(
-            {
-                path: "vaccines",
-                populate: {
-                    path: "doctor",
-                    select: '_id name',
-                },
-            }
-        ).exec();
+const getSubscriberById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const val = await Subscriber.findById({ _id: id })
+            .populate(
+                {
+                    path: "vaccines",
+                    populate: {
+                        path: "doctor",
+                        select: '_id name',
+                    },
+                }
+            ).exec();
+            console.log(val);
 
-        if(!val){
+        if (!val) {
             res.status(404)
-            .json({
-                seccess:false,
-                message:"Subscriber not found"
-            });
+                .json({
+                    seccess: false,
+                    message: "Subscriber not found"
+                });
         }
-        else{
+        else {
             res.status(200)
-            .json({
-                success:true,
-                data:val,
-                message:"Subscriber data fetched by id"
-            });
+                .json({
+                    success: true,
+                    data: val,
+                    message: "Subscriber data fetched by id"
+                });
         }
     }
-    catch(err){
+    catch (err) {
         console.error(err),
-        res.status(500).json({
-            success:false,
-            data:"internal server error",
-            message:err.message,
-        })
+            res.status(500).json({
+                success: false,
+                data: "internal server error",
+                message: err.message,
+            })
     }
 }
 
@@ -110,5 +114,70 @@ const getAllSubscriber = async (req, res) => {
         });
     }
 }
+const makelivesubscriber = async (req, res) => {
+    try {
+        const { id, doctorID } = req.params;
 
-module.exports = { getAllSubscriber,getSubscriberById,newSubscriber };
+        // Find the subscriber and doctor by their respective IDs
+        const subscriber = await Subscriber.findById(id);
+        const doctor = await Doctor.findById(doctorID);
+
+        // Check if subscriber exists
+        if (!subscriber) {
+            return res.status(404).json({
+                success: false,
+                message: "Subscriber not found"
+            });
+        }
+
+        // Check if doctor exists
+        if (!doctor) {
+            return res.status(404).json({
+                success: false,
+                message: "Doctor not found"
+            });
+        }
+
+        // If the doctor is already live with this subscriber, set both to offline
+        if (doctor.live === id) {
+            subscriber.live = "offline";
+            await subscriber.save();
+            doctor.live = "offline";
+            await doctor.save();
+            return res.status(200).json({
+                success: true,
+                message: "You are offline"
+            });
+        }
+        // If the doctor is available (offline), set both to live
+        if (doctor.live === "offline") {
+            subscriber.live = doctorID;
+            await subscriber.save();
+
+            doctor.live = id;
+            await doctor.save();
+        }
+
+
+        else {
+            return res.status(400).json({
+                success: false,
+                message: "Doctor already busy"
+            });
+        }
+
+        // Success response
+        return res.status(200).json({
+            success: true,
+            message: "You are going to meet with patient"
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            error: "Error while fetching data"
+        });
+    }
+};
+
+
+module.exports = { getAllSubscriber, getSubscriberById, newSubscriber, makelivesubscriber };

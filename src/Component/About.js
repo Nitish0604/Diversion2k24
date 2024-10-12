@@ -1,8 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const About = (props) => {
-    let isLoggedIn = props.isLoggedIn;
+const About = () => {
+    const userBehavior = (localStorage.getItem("user")) || "";
+    let isLoggedIn = userBehavior;
     return (
         <div className='w-full min-h-[200px] bg-midBlue py-2'>
             <div className='flex md:flex-row flex-col max-w-[1200px] w-full justify-around items-center h-full mx-auto'>

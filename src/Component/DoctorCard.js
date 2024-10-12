@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 
 const DoctorCard = ({ doctor, index }) => {
 
-    const [verify, setVerify] = useState(false);
+    const [verify, setVerify] = useState(doctor?.isApproved);
     // Add this state variable
     // const [verifiedDoctors, setVerifiedDoctors] = useState([]);
 
@@ -115,44 +115,44 @@ const DoctorCard = ({ doctor, index }) => {
         formData.userId = "";
     };
     return (
-        <div key={doctor._id} className='flex justify-around  cursor-pointer'>
+        <div key={doctor._id} className='flex justify-between cursor-pointer'>
             <p className='w-[5%] text-gray-800 py-[1rem] text-center '>{index + 1}</p>
-            <p className='w-[15%] text-gray-800 py-[1rem] text-center'>{doctor.name}</p>
-            <p className='w-[15%] text-gray-800  py-[1rem] text-center'>{doctor.qualification}</p>
-            <p className='w-[5%] text-gray-800  py-[1rem] text-center'>{doctor.gender}</p>
-            <p className='w-[20%] text-gray-800  py-[1rem] text-center text-wrap'>{doctor.email}</p>
-            <p className='w-[20%] text-gray-800  py-[1rem] text-center'>{doctor.phoneNo}</p>
+            <p className='w-[15%] text-gray-800 py-[1rem] text-center'>{doctor?.name}</p>
+            <p className='w-[15%] text-gray-800  py-[1rem] text-center'>{doctor?.qualification}</p>
+            <p className='w-[5%] text-gray-800  py-[1rem] text-center'>{doctor?.gender}</p>
+            <p className='w-[25%] text-gray-800  py-[1rem] text-center text-wrap'>{doctor?.email}</p>
+            <p className='w-[10%] text-gray-800  py-[1rem] text-center'>{doctor?.phoneNo}</p>
 
 
             {
                 verify ?
-                    (<div className='w-[20%] text-black flex gap-2 justify-center items-center'>
+                    (<div className='w-[25%] text-black flex gap-2 justify-center items-center'>
                         <input
                             type='text'
                             name='userId'
-                            value={formData.userId}
+                            value={formData?.userId}
                             onChange={changeHandler}
                             className='pl-1 h-[3rem]' />
                         <button
-                            onClick={() => assignDoctorPatient(doctor._id)}
+                            onClick={() => {
+                                assignDoctorPatient(doctor?._id);
+                                formData.userId = "";
+                            }}
                             className='bg-darkGreen px-3 py-2 rounded-md'
                         >ok</button>
                     </div>)
                     : (
-                        <div className='w-[20%] text-black flex gap-2 justify-center items-center'>
+                        <div className='w-[25%] text-black flex gap-2 justify-center items-center'>
                             {/* {!verifiedDoctors.includes(doctor._id) && (
                                 <> */}
-                                    <button onClick={() => handleVerification(doctor._id)} className='bg-white px-6 py-2 rounded-md'>
-                                        Verified
-                                    </button>
-                                    <button onClick={() => handleUnverification(doctor._id)} className='bg-white px-6 py-2 rounded-md'>
-                                        UnVerified
-                                    </button>
-                                {/* </>
-                            ) 
-                            } */}
+                            <button onClick={() => handleVerification(doctor?._id)} className='bg-white px-6 py-2 rounded-md'>
+                                Verified
+                            </button>
+                            <button onClick={() => handleUnverification(doctor?._id)} className='bg-white px-6 py-2 rounded-md'>
+                                UnVerified
+                            </button>
                         </div>
-                        )
+                    )
 
             }
 

@@ -62,7 +62,7 @@ function Home({ patient, doctor, dashboard }) {
         getAllDoctor();
         // console.log("allSubscriber", allSubscriber);
         // console.log("allSubscriber", allDoctor);
-    }, [allDoctor]);
+    }, []);
 
     const data = [
         {
@@ -309,23 +309,32 @@ function Home({ patient, doctor, dashboard }) {
                 <div className='main-container'>
                     <p className='w-full text-center text-black text-[2.6rem] uppercase font-semibold'>List of Patients</p>
                     <div className='w-full flex justify-around text-[1.3rem] '>
-                        <p className='w-[5%] text-gray-600 font-mono p-[1rem] text-center'>Sno:</p>
-                        <p className='w-[20%] text-gray-600 font-mono py-[1rem] text-center'>Guardian Name</p>
-                        <p className='w-[20%] text-gray-600 font-mono py-[1rem] text-center'>Patient Name</p>
-                        <p className='w-[10%] text-gray-600 font-mono py-[1rem] text-center'>Gender</p>
-                        <p className='w-[30%] text-gray-600 font-mono py-[1rem] text-center'>Email</p>
-                        <p className='w-[20%] text-gray-600 font-mono py-[1rem] text-center'>Contact</p>
+                        <p className='w-[5%] text-gray-600 font-mono py-[1rem] text-center '>Sno:</p>
+                        <p className='w-[20%] text-gray-600 font-mono py-[1rem] text-center '>SubscriberID</p>
+                        <p className='w-[13%] text-gray-600 font-mono py-[1rem] text-center '>Guardian<br></br>Name</p>
+                        <p className='w-[13%] text-gray-600 font-mono py-[1rem] text-center '>Patient<br></br>Name</p>
+                        <p className='w-[9%] text-gray-600 font-mono py-[1rem] text-center '>Gender</p>
+                        <p className='w-[25%] text-gray-600 font-mono py-[1rem] text-center '>Email</p>
+                        <p className='w-[15%] text-gray-600 font-mono py-[1rem] text-center '>Contact</p>
+                        <p className='w-[10%] text-gray-600 font-mono py-[1rem] text-center '>Assigned/<br></br>Not</p>
                     </div>
                     <div className='bg-midBlue rounded-md'>
 
-                        {allSubscriber.map((subscriber, index) => (
+                        {allSubscriber?.reverse()?.map((subscriber, index) => (
                             <div key={subscriber._id} className='flex justify-around hover:bg-[#ffff] cursor-pointer'>
-                                <p className='w-[5%] text-gray-800 py-[1rem] text-center '>{index + 1}</p>
-                                <p className='w-[20%] text-gray-800 py-[1rem] text-center'>{subscriber.guardianName}</p>
-                                <p className='w-[20%] text-gray-800  py-[1rem] text-center'>{subscriber.childName}</p>
-                                <p className='w-[10%] text-gray-800  py-[1rem] text-center'>{subscriber.gender}</p>
-                                <p className='w-[30%] text-gray-800  py-[1rem] text-center'>{subscriber.email}</p>
-                                <p className='w-[20%] text-gray-800  py-[1rem] text-center'>{subscriber.contact}</p>
+                                <p className='w-[5%] text-gray-800 py-[1rem] text-center '>{index + 1}.</p>
+                                <p className='w-[20%] text-gray-800 py-[1rem] text-center text-ellipsis '>{subscriber?._id}</p>
+                                <p className='w-[13%] text-gray-800 py-[1rem] text-center text-wrap'>{subscriber?.guardianName}</p>
+                                <p className='w-[13%] text-gray-800  py-[1rem] text-center  text-wrap'>{subscriber?.childName}</p>
+                                <p className='w-[9%] text-gray-800  py-[1rem] text-center'>{subscriber?.gender}</p>
+                                <p className='w-[25%] text-gray-800  py-[1rem] text-center'>{subscriber?.email}</p>
+                                <p className='w-[15%] text-gray-800  py-[1rem] text-center'>{subscriber?.contact}</p>
+                                {
+                                    subscriber?.assignedDoctor ?
+                                    <p className='w-[10%] text-gray-800  py-[1rem] text-center'>✅</p>
+                                    :
+                                    <p className='w-[10%] text-gray-800  py-[1rem] text-center'>❌</p>
+                                }
                             </div>
                         ))}
                     </div>
@@ -340,9 +349,9 @@ function Home({ patient, doctor, dashboard }) {
                         <p className='w-[15%] text-gray-600 font-mono py-[1rem] text-center'>Name</p>
                         <p className='w-[15%] text-gray-600 font-mono py-[1rem] text-center'>Qualification</p>
                         <p className='w-[5%] text-gray-600 font-mono py-[1rem] text-center'>Gender</p>
-                        <p className='w-[20%] text-gray-600 font-mono py-[1rem] text-center'>Email</p>
-                        <p className='w-[20%] text-gray-600 font-mono py-[1rem] text-center'>Contact</p>
-                        <p className='w-[20%] text-gray-600 font-mono py-[1rem] text-center'>Button</p>
+                        <p className='w-[25%] text-gray-600 font-mono py-[1rem] text-center'>Email</p>
+                        <p className='w-[10%] text-gray-600 font-mono py-[1rem] text-center'>Contact</p>
+                        <p className='w-[25%] text-gray-600 font-mono py-[1rem] text-center'>Button</p>
                     </div>
                     <div className='bg-midBlue rounded-md'>
 

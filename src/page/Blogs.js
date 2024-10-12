@@ -72,7 +72,7 @@ const Blogs = () => {
       </p>
       </div>
      
-      <div className='flex w-full h-screen mt-5'>
+      <div className='flex w-full mt-5'>
         {/* right button*/}
 
         <div className='w-[20%]  bg-white  '>
@@ -95,27 +95,14 @@ const Blogs = () => {
           <button className='w-full h-[50px] bg-slate-100 mb-1 flex items-center p-4 hover:bg-blue hover:text-white'onClick={Kid4}>
           Mental Health Care 
           </button>
-          <div className='w-full h-[50px] bg-slate-100 mb-1 flex items-center p-4 hover:bg-blue hover:text-white'>
-            Diarrhea
-          </div>
-          <div className='w-full h-[50px] bg-slate-100 mb-1 flex items-center p-4 hover:bg-blue hover:text-white'>
-            Diarrhea
-          </div>
-          <div className='w-full h-[50px] bg-slate-100 mb-1 flex items-center p-4 hover:bg-blue hover:text-white'>
-            Diarrhea
-          </div>
-          <div className='w-full h-[50px] bg-slate-100 mb-1 flex items-center p-4 hover:bg-blue hover:text-white'>
-            Diarrhea
-          </div>
-          <div className='w-full h-[50px] bg-slate-100 mb-1 flex items-center p-4 hover:bg-blue hover:text-white'>
-            Diarrhea
-          </div>
+          
+          
 
 
         </div>
 
         {/* left */}
-        <div className='w-[80%] h-full bg-white right-1 border-2 p-6 relative overflow-scroll '  >
+        <div className='w-[80%] h-full bg-white right-1 border-2 p-6 relative overflow-scroll dashboardScroll '  >
 
           {/* Kids Teeth Care */}
           <div className='w-full h-full 'id='a' >
@@ -169,7 +156,7 @@ const Blogs = () => {
 
           {/* Nutrition Tips For Kids */}
           <div  className='w-full h-full hidden 'id='c' >
-            <img className="size-[300px] rounded-md absolute right-0" src='/kids-nutrition.png' alt=''></img>
+            <img className="size-[260px] rounded-md absolute right-[0]" src='https://nutritionsource.hsph.harvard.edu/wp-content/uploads/2016/01/KidsHealthyEatingPlate_Jan2016.jpg' alt=''></img>
             <div className='ml-5'>
               <h1 className='text-[2.2rem]  text-slate-500'>Nutrition Tips For Kids</h1>
               <div className='w-[20%] h-[2px] bg-red-600'></div>

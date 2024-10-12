@@ -59,9 +59,13 @@ const subscriberSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Package",
     }],
-    assignedDoctor: {
+    assignedDoctor: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Doctor",
+    }],
+    live :{
+        type: String,
+        default : "offline"
     }
 });
 

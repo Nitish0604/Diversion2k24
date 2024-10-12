@@ -47,8 +47,16 @@ const doctorSchema = new mongoose.Schema({
     assignedPatients: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Subscriber",
-    }]
+    }],
+    isApproved: {
+        type: Boolean,
+        default: false,
+    },
+    live: {
+        type: String,
+        default : "offline"
+    }
 
 });
 
-module.exports = mongoose.model("Doctor",doctorSchema);
+module.exports = mongoose.model("Doctor", doctorSchema);

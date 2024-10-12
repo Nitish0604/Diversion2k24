@@ -5,6 +5,8 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from "react-hot-toast";
 
+export const baseurl = "http://localhost:4000" + "/api/PlusCare";
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>

@@ -13,12 +13,12 @@ import ChooseUs from '../Component/ChooseUs';
 
 
 
-const Home = ({ isLoggedIn, setIsLoggedIn }) => {
+const Home = () => {
   return (
     <div>
       <Hero />
-      <About isLoggedIn={isLoggedIn} />
-      <StepPage isLoggedIn={isLoggedIn} />
+      <About  />
+      <StepPage />
       <ChooseUs />
       <ScheduleDoctor />
       <Footer />

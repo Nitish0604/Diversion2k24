@@ -5,6 +5,10 @@ const packageSchema = new mongoose.Schema ({
         type: mongoose.Schema.Types.ObjectId,
         ref:  "Subscriber",
     },
+    orderId: {
+        type: String,
+        required: true,
+    },
     packageName: {
         type: String,
         required: true,
@@ -20,6 +24,14 @@ const packageSchema = new mongoose.Schema ({
     description: {
         type: String,
         required: true,
+    },
+    paymentStatus: {
+        type: String,
+        default: "Pending",
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
     }
 });
 

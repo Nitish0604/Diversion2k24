@@ -6,10 +6,12 @@ import Contact from './page/Contact';
 import Subscription from './page/Subscription';
 import DashBoard from './page/DashBoard';
 import Login from './page/Login';
-import JoinDoctor from './page/JoinDoctor';
 import Symptoms from './page/Symptoms'
 import AdminDashboard from './page/AdminDashboard';
-import DoctorDashboard from './page/DoctorDashboard';
+import JoinDoctor from './page/Doctor/JoinDoctor';
+import DoctorDashboard from './page/Doctor/DoctorDashboard';
+import Purchase from './page/Purchase';
+import PateintVaccine from './page/PateintVaccine';
 
 // components part
 import Navbar from './Component/Navbar';
@@ -22,31 +24,31 @@ import { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [patientDoctor, setPatientDoctor] = useState(false);  //check patient or doctor is login
 
-  const excludedPaths = ['/dashboard','/AdminDashboard','/doctordashboard'];
+  const excludedPaths = ['/dashboard', '/AdminDashboard', '/doctordashboard', '/purchase'];
   const location = useLocation();
   return (
     <div className="relative">
-      {!excludedPaths.includes(location.pathname) && <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} patientDoctor={patientDoctor}  />}
+      {!excludedPaths.includes(location.pathname) && <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
       <Routes>
-        <Route path="/" element={<Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/" element={<Home />} />
         <Route path="contact" element={<Contact />} />
         <Route path="symptoms" element={<Symptoms />} />
         <Route path="blogs" element={<Blogs />} />
 
-        <Route path="login" element={<Login setIsLoggedIn={setIsLoggedIn} setPatientDoctor={setPatientDoctor}/>} />
+        <Route path="login" element={<Login />} />
         <Route path="subscription" element={<Subscription />} />
         <Route path="joinDoctor" element={<JoinDoctor />} />
+        <Route path="purchase" element={<Purchase />} />
+        <Route path="vaccine/:id" element={<PateintVaccine />} />
 
-        <Route path="/AdminDashboard" element={<AdminDashboard setIsLoggedIn={setIsLoggedIn}
-        setIsMenuOpen={setIsMenuOpen}/>} />
-        <Route path="/doctordashboard" element={<DoctorDashboard setIsLoggedIn={setIsLoggedIn}
-        setIsMenuOpen={setIsMenuOpen}/>} />
+        <Route path="/AdminDashboard" element={<AdminDashboard
+          setIsMenuOpen={setIsMenuOpen} />} />
+        <Route path="/doctordashboard" element={<DoctorDashboard
+          setIsMenuOpen={setIsMenuOpen} />} />
         <Route path="/dashboard" element={
-            <DashBoard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
+          <DashBoard />} />
         <Route path="*" element={<NoPage />} />
       </Routes>
     </div>

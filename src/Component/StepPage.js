@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const StepPage = (props) => {
-    let isLoggedIn = props.isLoggedIn;
+    const userBehavior = (localStorage.getItem("user")) || "";
+    let isLoggedIn = userBehavior;
     const [patient, setPatient] = useState(true);
     return (
         <div className='w-full h-fit mt-[3rem]'>
@@ -12,8 +13,8 @@ const StepPage = (props) => {
                     <div className='text-[1.4rem] text-blue font-bold uppercase'>Step How To Use</div>
                     <div className='w-[300px] bg-darkGreen h-[4px] mb-3'></div>
                     <div >
-                        <button onClick={() => setPatient(true)} className='rounded-[50px] px-9 py-3 text-[1.1rem] font-semibold bg-darkGreen mr-2'>Patient</button>
-                        <button onClick={() => setPatient(false)} className='rounded-[50px] px-9 py-3 text-[1.1rem] font-semibold bg-darkGreen ml-2'>Doctor</button>
+                        <button className= {`${patient ? ('bg-darkGreen') : 'bg-lightGreen'} rounded-[50px] px-9 py-3 text-[1.1rem] font-semibold bg-darkGreen mr-2`} onClick={() => setPatient(true)} >Patient</button>
+                        <button onClick={() => setPatient(false)} className={`${patient ? ('bg-lightGreen') : 'bg-darkGreen'} rounded-[50px] px-9 py-3 text-[1.1rem] font-semibold bg-darkGreen ml-2`}>Doctor</button>
                     </div>
                 </div>
 
